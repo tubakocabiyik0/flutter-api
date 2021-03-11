@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:rick_morty/Model/CharactersC.dart';
 
 class CharacterDetail extends StatefulWidget {
@@ -22,7 +23,14 @@ class StateD extends State<CharacterDetail> {
   String gender;
   String species;
   int i;
-
+  Color dominantColor;
+  PaletteGenerator paletteGenerator;
+ @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    findColor();
+  }
   @override
   Widget build(BuildContext context) {
     if (widget.characterName != null) {
@@ -55,7 +63,7 @@ class StateD extends State<CharacterDetail> {
               right: 10,
               left: 10,
               child:Container(
-                color: Colors.red.shade200,
+                color:dominantColor,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -86,5 +94,14 @@ class StateD extends State<CharacterDetail> {
 
     );
   }
-
+  findColor() {
+    Future<PaletteGenerator> fpaletteGenerator = PaletteGenerator
+        .fromImageProvider(NetworkImage(widget.imageUrl));
+    fpaletteGenerator.then((value) {
+      paletteGenerator=value ;
+      setState(() {
+        dominantColor = paletteGenerator.vibrantColor.color;
+      });
+    });
+  }
 }
